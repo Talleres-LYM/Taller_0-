@@ -14,7 +14,8 @@ accepted_words = ["ROBOT_R","VARS", "PROCS",
             "four","five","six","seven","eight",
             "nine", "zero", "1", "2","3","4",
             "5","6","7", "8", "9", "0", "c", "b",
-            "do", "then", "else"]
+            "do", "then", "else", "putCB", "goNorth", 
+            "goWest", "goTo", "putcb"]
 variables= {}
 tokens= []  
 comandcode =""
@@ -144,22 +145,31 @@ def check_headline():
         rta="yes"
     print(rta)
 
+def check_language():
+    rta="no"
+    for token in tokens:
+        if token not in accepted_words:
+            rta="no"
+    print(rta)
+
 
 def check_body():
     rta="no"
     open = 0
     closed = 0
+    aux = []
     for token in tokens[11:-1]:
-        new_list = list()
-        if token not in accepted_words:
-          print(rta)
+
+                
+        if token == "[":
+            new_list = list()
+            open +=1
         elif token == "]":
             closed+=1
-        elif token == "[":
             
-            open +=1
-        elif open == closed:
             new_list.append(token)
+        elif open == closed:
+            
             open=0
             closed=0              
         print(new_list)
@@ -168,6 +178,5 @@ def check_body():
 def ejecutar():
     nombre_archivo=input("Ingrese el nombre del archivo: ")
     archivo(nombre_archivo)
-    check_headline()   
-    check_body()
+    check_language()
 ejecutar()
