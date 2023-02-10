@@ -1,19 +1,24 @@
 from ast import Str
 from lib2to3.pgen2.parse import ParseError
-keywords = ["ROBOT_R","VARS", "PROCS", 
+accepted_words = ["ROBOT_R","VARS", "PROCS", 
             "assignTo","goto","move",
             "turn","face","put","pick",
-            "moveToThe","run-dirs",
-            "movInDir","jumpToThe",
+            "moveToThe", "movInDir","jumpToThe",
             "jumpInDir","nop","if",
-            "while", "repeat"]
+            "while", "repeat", "left",
+            "right","around", "north",
+            "south","west","east", "left",
+            "front","right","back", "balloons",
+            "chips", "[","]", "|", ":", ";", ",", 
+            "nom", "x", "y", "one", "two","three",
+            "four","five","six","seven","eight",
+            "nine", "zero", "1", "2","3","4",
+            "5","6","7", "8", "9", "0", "c", "b",
+            "do", "then", "else"]
 variables= {}
-orientations=["left","right","around"]
-cardinals=["north","south","west","east"]
-directions=["left","front","right","back"]
-objects=["balloons","chips"]
 tokens= []  
-
+comandcode =""
+""""
 def run():
     counter= 0
     for i in tokens:
@@ -113,7 +118,7 @@ def ifparser():
 
 def newvar(varname:str,varval:int):
     variables[varname]= varval
-
+"""
 def archivo(nombre_archivo:str):
     txtfile = open(nombre_archivo, "r")
     
@@ -122,16 +127,47 @@ def archivo(nombre_archivo:str):
         global comandcode
         comandcode += " "+linea
     global tokens
-    tokens = comandcode.split()     
-    if tokens[0] != "[":
-        raise ParseError("no")    
+    tokens = comandcode.split()       
+    
+
+def check_headline():
+    rta="no"
+    headers=[]
+    i=0
+    for token in tokens:
+        if token not in accepted_words:
+          print(rta)
+    while tokens[i] != "PROCS":
+        headers.append(tokens[i])
+        i+=1
+    if len(headers) == 10:    
+        rta="yes"
+    print(rta)
+
+
+def check_body():
+    rta="no"
+    open = 0
+    closed = 0
+    for token in tokens[11:-1]:
+        new_list = list()
+        if token not in accepted_words:
+          print(rta)
+        elif token == "]":
+            closed+=1
+        elif token == "[":
+            
+            open +=1
+        elif open == closed:
+            new_list.append(token)
+            open=0
+            closed=0              
+        print(new_list)
+            
 
 def ejecutar():
     nombre_archivo=input("Ingrese el nombre del archivo: ")
-    try:
-        archivo(nombre_archivo)
-        print("Yes")
-    except:
-        print("no")
-    
+    archivo(nombre_archivo)
+    check_headline()   
+    check_body()
 ejecutar()
