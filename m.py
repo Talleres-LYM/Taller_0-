@@ -1,7 +1,7 @@
 accepted_words = ["ROBOT_R","VARS", "PROCS", 
             "assignTo","goto","move",
             "turn","face","put","pick",
-            "moveToThe", "movInDir","jumpToThe",
+            "moveToThe", "moveInDir","jumpToThe",
             "jumpInDir","nop","if",
             "while", "repeat", "left",
             "right","around", "north",
@@ -13,7 +13,9 @@ accepted_words = ["ROBOT_R","VARS", "PROCS",
             "nine", "zero", "1", "2","3","4",
             "5","6","7", "8", "9", "0", "c", "b",
             "do", "then", "else", "putCB", "goNorth", 
-            "goWest", "goTo", "putcb"]
+            "goWest", "goTo", "putcb", "facing", "canPut",
+            "canPick", "canMoveInDir", "canJumpInDir",
+            "canMoveToThe", "canJumpToThe", "not"]
 tokens= []  
 leer =""
 
@@ -40,35 +42,37 @@ def check_headline():
         rta="yes"
     print(rta)
 
-def check_language():
-    rta="no"
-    for token in tokens:
+def check_language(lista):
+    rta="yes"
+    for token in lista:
         if token not in accepted_words:
             rta="no"
-    print(rta)
+    return rta
 
 
 def check_body():
-    rta="no"
-    open = 0
-    closed = 0
+    rta1="yes"
+    count = 1
+    i = 13
     aux = []
-    for token in tokens[11:-1]:
-
-        if token == "[":
-            new_list = list()
-            open +=1
-        elif token == "]":
-            closed+=1
-            new_list.append(token)
-        elif open == closed:
-            open=0
-            closed=0              
-        print(new_list)
+    while i < len(tokens):
+        aux.append(tokens[i])
+        if tokens[i] == "[":
+            count += 1
+        if tokens[i] == "]":
+            count -= 1
+        if count == 0:
+            i += 1 
+        i += 1
+    if check_language(aux) == "no":
+        rta1 = "no"        
+    if count != 0:
+        rta1 = "no"
+    print(rta1)
             
 
 def ejecutar():
     nombre_archivo=input("Ingrese el nombre del archivo: ")
     archivo(nombre_archivo)
-    check_language()
+    check_body()
 ejecutar()
